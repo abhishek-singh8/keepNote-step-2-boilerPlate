@@ -35,6 +35,7 @@ When the user enters the Note Title, Note Content, Note status and clicks on Add
 
 ### Steps to be followed:
 
+
     Step 1: Clone the boilerplate in a specific folder in your local machine and import the same in your eclipse STS.
     Step 2: Add relevant dependencies in pom.xml file. 
         Note: Read the comments mentioned in pom.xml file for identifying the relevant dependencies.

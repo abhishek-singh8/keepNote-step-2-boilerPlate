@@ -2,7 +2,14 @@ package com.stackroute.keepnote.dao;
 
 import java.util.List;
 
+import javax.persistence.Query;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.stackroute.keepnote.model.Note;
 
@@ -15,24 +22,36 @@ import com.stackroute.keepnote.model.Note;
  * 					transaction. The database transaction happens inside the scope of a persistence 
  * 					context.  
  * */
-
+@Repository
+@Transactional
 public class NoteDAOImpl implements NoteDAO {
 
 	/*
 	 * Autowiring should be implemented for the SessionFactory.
 	 */
-
+	@Autowired
+    SessionFactory sessionFactory;
 	public NoteDAOImpl(SessionFactory sessionFactory) {
-
+        this.sessionFactory=sessionFactory;
 	}
 
 	/*
 	 * Save the note in the database(note) table.
 	 */
 
-	public boolean saveNote(Note note) {
-		return false;
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
 
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
+	public boolean saveNote(Note note) {
+		Session session=sessionFactory.getCurrentSession();
+		session.save(note);
+		session.flush();
+		return true;
 	}
 
 	/*
@@ -40,7 +59,14 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean deleteNote(int noteId) {
-		return false;
+		if(getNoteById(noteId)==null) {
+			return false;
+		} else {
+			Session session=sessionFactory.getCurrentSession();
+			session.delete(getNoteById(noteId));
+			session.flush();
+			return true;
+		}
 
 	}
 
@@ -49,22 +75,35 @@ public class NoteDAOImpl implements NoteDAO {
 	 * order(showing latest note first)
 	 */
 	public List<Note> getAllNotes() {
-		return null;
-
+		String hql = "FROM Note note ORDER BY note.createdAt DESC"; //how to short this
+		Query query = getSessionFactory().getCurrentSession().createQuery(hql);
+		return query.getResultList();
 	}
 
 	/*
 	 * retrieve specific note from the database(note) table
 	 */
 	public Note getNoteById(int noteId) {
-		return null;
+		Session session=sessionFactory.getCurrentSession();
+		Note note = (Note)session.get(Note.class, noteId);
+		session.flush();
+		return note;
 
 	}
 
 	/* Update existing note */
 
 	public boolean UpdateNote(Note note) {
-		return false;
+		if(getNoteById(note.getNoteId())==null) {
+			return false;
+		} else {
+			sessionFactory.getCurrentSession().clear();
+		
+			sessionFactory.getCurrentSession().update(note);
+			sessionFactory.getCurrentSession().flush();;
+
+			return true;
+		}
 
 	}
 
