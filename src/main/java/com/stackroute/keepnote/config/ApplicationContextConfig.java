@@ -55,7 +55,7 @@ public class ApplicationContextConfig {
 			properties.put("hibernate.show_sql", "true");
 			properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
 			properties.put("hibernate.hbm2ddl.auto", "update");
-			properties.put("hibernate.use_sql_comments", false); //to be read
+			properties.put("hibernate.use_sql_comments", true); //to be read
 	        return properties;
 	    }
 		@Bean

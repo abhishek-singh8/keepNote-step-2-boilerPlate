@@ -40,6 +40,11 @@ public class NoteController {
 	@Autowired
 	private NoteDAO noteDao; //which type of autowiring 
 
+
+	public NoteController(NoteDAO noteDao2) {
+		// TODO Auto-generated constructor stub
+	}
+
 	/*
 	 * Define a handler method to read the existing notes by calling the
 	 * getAllNotes() method of the NoteRepository class and add it to the ModelMap
